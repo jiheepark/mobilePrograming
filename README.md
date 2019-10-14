@@ -1,12 +1,8 @@
-# **Naverspeech SDK for Android**
-
-> 본 저장소는 Android용 네이버 음성인식 라이브러리 및 예제 프로젝트를 포함하고 있습니다.
-
-자세한 내용은 [네이버개발자 음성인식 API 명세](https://developers.naver.com/docs/labs/vrecog) 및 [Android API Document](http://naver.github.io/naverspeech-sdk-android/) 를 참고하세요.
+# **mobile programing project1**
 
 v.1.1.3
 -------------
-### "이번 업데이트에서 새롭게 추가된 내용은 다음과 같습니다."
+### "소프트에어학부 20162772 박지희"
 #### 0. 지원 아키텍쳐 추가
 기존에 arm, arm-v7만 지원하던 점을 개선하여 모든 아키텍쳐에 호환되도록 수정하였습니다.
 
