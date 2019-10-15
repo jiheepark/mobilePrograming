@@ -48,10 +48,12 @@
               Toast.makeText(getApplicationContext(), "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
           }
          else if(!radioButton1.isChecked()){
+               //개인정보 약관에 동의가 안되어 있는 경우
               Toast.makeText(getApplicationContext(), "개인정보약관에 동의해주세요.", Toast.LENGTH_SHORT).show();
           }
           else {
               try {
+                  //만약 모두 완료했다면, 입력된 아이디 값으로 파일생성 후 데이터 저장
                   String idText = editID.getText() + ".txt";
                   BufferedWriter bw = new BufferedWriter(new FileWriter(getFilesDir() + idText, false));
                   bw.write(editPassword.getText() + "");
@@ -69,12 +71,44 @@
 
   });
 ```
-**1.** MainActivity.java  - 첫번째 페이지(로그인화면) 로그인 함수 
+**2.** MainActivity.java  - 첫번째 페이지(로그인화면) 로그인 함수 
 ```
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    compile 'com.naver.speech.clientapi:naverspeech-sdk-android:1.1.3'
-  }
+  loginButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+
+            public void onClick(View v){
+                try{
+                    BufferedReader br = new BufferedReader(new FileReader(getFilesDir()+(inputID.getText()+".txt")));
+                    //입력된 아이디의 값과 일치하는 파일을 오픈한다. 
+                    String readStr = "";
+                    String str = null;
+                    while(((str = br.readLine()) != null)){
+                        readStr += str +"\n";
+                    }
+                    br.close();
+
+                    if(readStr.substring(0, readStr.length()-1).equals(inputPW.getText()+"")){
+                        //읽은 파일에 적힌 데이터와 비밀번호가 일치하면 다음화면(HomeActivity)로 넘어간다.  
+                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                         //비밀번호가 다르면 toast로 알린다.
+                        Toast.makeText(getApplicationContext(), "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (FileNotFoundException e){
+                    //같은 이름의 파일을 찾지 못한다면 toast로 알린다.
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "아이디를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+```
+**2.** JoinActivity.java  - 두번째 페이지(회원가입화면) 로그인 함수 
+```
+
 ```
