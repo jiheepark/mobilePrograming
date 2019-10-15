@@ -5,6 +5,61 @@
 #### " 20162772 박지희"
 #### 소프트웨어학부
 
+회원가입페이지(JoinActivity.class, layout_join.xml)<로그인화면으로 가기> 버튼 -> 테스트 버튼 
+-------------
+
+
+회원가입 페이지에 <로그인화면으로 가기>  버튼이 있는데 이것은 파일 입출력에서 회원가입이 잘 되었는지 확인하는 버튼입니다.
+회원가입 페이지에서 아이디를 입력하면 해당 아이디.txt의 파일을 toast로 보여줍니다. 
+
+만약 로그인화면으로 돌아가게 구현하고 싶다면
+before코드를 after코드로 수정하면 됩니다. 
+
+#### before
+'''
+
+        Button joinText =(Button) findViewById(R.id.beforeButton);
+
+        joinText.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                try{
+                    BufferedReader br = new BufferedReader(new FileReader(getFilesDir()+(editID.getText()+".txt")));
+                    String readStr = "";
+                    String str = null;
+                    while(((str = br.readLine()) != null)){
+                        readStr += str +"\n";
+                    }
+                    br.close();
+
+                    Toast.makeText(getApplicationContext(), readStr.substring(0, readStr.length()-1), Toast.LENGTH_SHORT).show();
+
+                }catch (FileNotFoundException e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "File not Found", Toast.LENGTH_SHORT).show();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+'''
+
+#### after
+'''
+
+        Button joinText =(Button) findViewById(R.id.beforeButton);
+
+        joinText.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                  startActivity(intent);
+            }
+
+        });
+'''
+
 테스트환경
 -------------
 #### 1. 안드로이드 스튜디오 SDK (Tools -> SDK Manager로 확인)
@@ -108,7 +163,42 @@
         });
 
 ```
-**2.** JoinActivity.java  - 두번째 페이지(회원가입화면) 로그인 함수 
-```
+**2.** JoinActivity.java  - 두번째 페이지(회원가입화면) 아이디중복검사 함수와 비밀번호 조건확인 함수 
 
+
+## 비밀번호 조건확인 함수 
+```
+editPassword.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력되는 텍스트에 변화가 있을 때
+                String password = editPassword.getText()+"";
+                //비밀번호 유효성 검사식1 : 숫자와 특수문자가 포함되어야 한다.
+                String val_symbol = "([0-9].*[!,@,#,^,&,*,(,)])|([!,@,#,^,&,*,(,)].*[0-9])";
+                // 비밀번호 유효성 검사식2 : 영문자 대소문자가 적어도 하나씩은 포함되어야 한다.
+                String val_alpha = "([a-z].*[A-Z])|([A-Z].*[a-z])";
+                // 정규표현식 컴파일
+                Pattern pattern_symbol = Pattern.compile(val_symbol);
+                Pattern pattern_alpha = Pattern.compile(val_alpha);
+
+                Matcher matcher_symbol = pattern_symbol.matcher(password);
+                Matcher matcher_alpha = pattern_alpha.matcher(password);
+
+                if (matcher_symbol.find() && matcher_alpha.find() && password.length()>=8) {
+                    // email과 password로 회원가입 진행
+                    passwordCheckBox.setChecked(true);
+                }else {
+                    passwordCheckBox.setChecked(false);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에
+            }
+        });
 ```
